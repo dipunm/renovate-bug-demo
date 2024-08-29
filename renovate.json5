@@ -1,0 +1,33 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+
+  /*
+   * https://docs.renovatebot.com/configuration-options/#rangestrategy
+   * Convert ranges to exact versions.
+   *
+   * This ensures dependant libraries install a specific version of a dependency.
+   */
+  rangeStrategy: 'pin',
+
+  packageRules: [
+
+    /*
+     * https://docs.renovatebot.com/configuration-options/#postupgradetasks
+     * Post-upgrade tasks that are executed before a commit is made by Renovate.
+     *
+     * Normalises auto-generated files to prevent workflow conflicts and generates a changeset.
+     */
+    {
+      matchDepTypes: [
+        'dependencies', 
+        'peerDependencies',
+      ],
+      postUpgradeTasks: {
+        commands: [
+          'echo \'{{{packageFile}}}\'  \'{{{prTitle}}}\' \'{{{commitMessage}}}\' \'{{{replace \'@\' \'_at_\' depNameSanitized}}}\'',
+        ],
+        executionMode: 'update',
+      },
+    },
+  ],
+}
